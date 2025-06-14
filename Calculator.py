@@ -1,60 +1,46 @@
-from tkinter import Tk, Entry, Button, StringVar
+import tkinter as tk
 
-class Calculator:
+def click(event):
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(0, current + str(event.widget.cget("text")))
 
-    def __init__(self,master):
+def clear():
+    entry.delete(0, tk.END)
 
-        master.title("Calculator")
-        master.geometry('357x420+0+0')
-        master.config(bg='gray')
-        master.resizable(False, False)
+def calculate():
+    try:
+        result = eval(entry.get())
+        entry.delete(0, tk.END)
+        entry.insert(0, str(result))
+    except ZeroDivisionError:
+        entry.delete(0, tk.END)
+        entry.insert(0, "Error")
+    except:
+        entry.delete(0, tk.END)
+        entry.insert(0, "Invalid")
 
+root = tk.Tk()
+root.title("Simple Calculator")
 
-        self.equation = StringVar()
-        self.entry_value = ''
-        Entry(width=17,bg='#fff', font=('Arial Bold', 28), textvariable=self.equation).place(x=0,y=0)
+entry = tk.Entry(root, font="Arial 20", bd=10, relief=tk.RIDGE, justify="right")
+entry.grid(row=0, column=0, columnspan=4)
 
-        Button(width=11,height=4,text='(',relief='flat',bg='white',command=lambda:self.show('(')).place(x=0 , y=50)
-        Button(width=11,height=4,text=')',relief='flat',bg='white',command=lambda:self.show(')')).place(x=90 ,y=50)
-        Button(width=11,height=4,text='%',relief='flat',bg='white',command=lambda:self.show('%')).place(x=180 ,y=50)
-        Button(width=11,height=4,text='1',relief='flat',bg='white',command=lambda:self.show(1)).place(x=0 , y=125)
-        Button(width=11,height=4,text='2',relief='flat',bg='white',command=lambda:self.show(2)).place(x=90 , y=125)
-        Button(width=11,height=4,text='3',relief='flat',bg='white',command=lambda:self.show(3)).place(x=180 , y=125)
-        Button(width=11,height=4,text='4',relief='flat',bg='white',command=lambda:self.show(4)).place(x=0, y=200)
-        Button(width=11,height=4,text='5',relief='flat',bg='white',command=lambda:self.show(5)).place(x=90 , y=200)
-        Button(width=11,height=4,text='6',relief='flat',bg='white',command=lambda:self.show(6)).place(x=180 , y=200)
-        Button(width=11,height=4,text='7',relief='flat',bg='white',command=lambda:self.show(7)).place(x=0 , y=275)
-        Button(width=11,height=4,text='8',relief='flat',bg='white',command=lambda:self.show(8)).place(x=90 , y=275)
-        Button(width=11,height=4,text='9',relief='flat',bg='white',command=lambda:self.show(9)).place(x=180 , y=275)
-        Button(width=11,height=4,text='0',relief='flat',bg='white',command=lambda:self.show(0)).place(x=90 , y=350)
-        Button(width=11,height=4,text='.',relief='flat',bg='white',command=lambda:self.show('.')).place(x=180 , y=350)
-        Button(width=11,height=4,text='+',relief='flat',bg='white',command=lambda:self.show('+')).place(x=270 , y=275)
-        Button(width=11,height=4,text='-',relief='flat',bg='white',command=lambda:self.show('-')).place(x=270, y=200)
-        Button(width=11,height=4,text='/',relief='flat',bg='white',command=lambda:self.show('/')).place(x=270 , y=50)
-        Button(width=11,height=4,text='x',relief='flat',bg='white',command=lambda:self.show('*')).place(x=270 , y=125)
-        Button(width=11,height=4,text='=',relief='flat',bg='white',command=self.solve).place(x=270, y=350)
-        Button(width=11,height=4,text='C',relief='flat',bg='white',command=self.clear).place(x=0 , y=350)
+buttons = [
+    ('7', 1, 0), ('8', 1, 1), ('9', 1, 2), ('/', 1, 3),
+    ('4', 2, 0), ('5', 2, 1), ('6', 2, 2), ('*', 2, 3),
+    ('1', 3, 0), ('2', 3, 1), ('3', 3, 2), ('-', 3, 3),
+    ('0', 4, 0), ('.', 4, 1), ('+', 4, 2), ('=', 4, 3)
+]
 
+for (text, r, c) in buttons:
+    if text == '=':
+        tk.Button(root, text=text, height=2, width=6, command=calculate).grid(row=r, column=c)
+    else:
+        btn = tk.Button(root, text=text, height=2, width=6)
+        btn.grid(row=r, column=c)
+        btn.bind('<Button-1>', click)
 
+tk.Button(root, text='C', height=2, width=26, command=clear).grid(row=5, column=0, columnspan=4)
 
-
-
-
-
-    def show(self,value):
-        self.entry_value+=str(value)
-        self.equation.set(self.entry_value)
-
-    def clear(self):
-        self.entry_value = ''
-        self.equation.set(self.entry_value)
-    def solve(self):
-        result =  eval(self.entry_value)
-        self.equation.set(result)
-
-
-
-                     
-root = Tk()
-calulator=Calculator(root)
 root.mainloop()
